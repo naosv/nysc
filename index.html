@@ -23,7 +23,7 @@
 
 <style>
   :root{
-    --fondo:      #F7F4EE;
+    --fondo:      #FAF9F4;
     --panel:      #FFFFFF;
     --texto:      #151310;
     --texto-sec:  #686158;
@@ -111,7 +111,7 @@
   .socials a:hover{ background:var(--texto); color:var(--fondo); border-color:var(--texto); }
 
   .barra{
-    position:sticky; top:0; z-index:20;
+    position:relative;
     background:var(--fondo);
     border-bottom:1px solid var(--linea);
     padding:20px 0 18px;
@@ -128,7 +128,7 @@
     color:var(--texto);
   }
   .buscar:focus{ outline:none; border-color:var(--texto); }
-  .chips{ display:flex; gap:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .chips{ display:flex; gap:10px; overflow-x:auto; padding-bottom:12px; margin-bottom:-12px; -webkit-overflow-scrolling:touch; }
   .chip{
     flex:0 0 auto;
     font-family:"Space Mono", monospace;
