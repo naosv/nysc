@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo · <nysc class="cr"></nysc></title>
+
+<!--
+==========================================================================
+  ¡HOLA! ESTE ES TU CATÁLOGO. SOLO TENÉS QUE EDITAR 2 COSAS:
+
+  1) Los datos de tu tienda  -> busca abajo "const TIENDA"
+  2) Tus prendas             -> busca abajo "const PRENDAS"
+
+  Todo lo demás (diseño, botones, filtros) ya funciona solo.
+  No necesitás saber programar: copiá, pegá y cambiá el texto.
+==========================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --fondo:      #F7F4EE;
+    --panel:      #FFFFFF;
+    --texto:      #151310;
+    --texto-sec:  #686158;
+    --linea:      #D7D2C8;
+    --acento:     #000000;
+    --btn:        #151310;
+    --btn-hov:    #36312b;
+    --radio:      18px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--fondo);
+    color:var(--texto);
+    font-family:"DM Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 18px; }
+
+  /* ---------- ENCABEZADO ---------- */
+  header.top{
+    text-align:center;
+    padding:60px 18px 22px;
+  }
+  .marca{
+    display:none;
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:700;
+    font-size:clamp(48px, 12vw, 96px);
+    letter-spacing:-0.04em;
+    line-height:0.95;
+    margin:0;
+    text-transform:none;
+  }
+
+  /* logo image support: show image when present, hide text brand */
+  .logo-wrap{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    max-width:420px;
+    max-height:120px;
+    margin:0 auto;
+    overflow:hidden;
+    border-radius:0;
+    background:transparent;
+    padding:0;
+  }
+  .logo{
+    width:100%;
+    max-width:100%;
+    max-height:100%;
+    display:block;
+    object-fit:contain;
+  }
+  header.top.no-logo .logo{ display:none; }
+  header.top.no-logo .marca{ display:block; }
+  .eslogan{
+    font-family:"Space Mono", monospace;
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--texto-sec);
+    margin:18px auto 0;
+  }
+  .socials{
+    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+    margin-top:26px;
+  }
+  .socials a{
+    font-family:"Space Mono", monospace;
+    font-size:11px;
+    text-decoration:none;
+    border:1px solid var(--linea);
+    border-radius:999px;
+    padding:9px 18px;
+    color:var(--texto);
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .socials a:hover{ background:var(--texto); color:var(--fondo); border-color:var(--texto); }
+
+  .barra{
+    position:sticky; top:0; z-index:20;
+    background:var(--fondo);
+    border-bottom:1px solid var(--linea);
+    padding:20px 0 18px;
+  }
+  .barra-row{ display:flex; flex-direction:column; gap:14px; }
+  .buscar{
+    width:100%;
+    font-family:"DM Sans", sans-serif;
+    font-size:15px;
+    padding:14px 18px;
+    border:1px solid var(--linea);
+    border-radius:999px;
+    background:var(--panel);
+    color:var(--texto);
+  }
+  .buscar:focus{ outline:none; border-color:var(--texto); }
+  .chips{ display:flex; gap:10px; overflow-x:auto; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .chip{
+    flex:0 0 auto;
+    font-family:"Space Mono", monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    border:1px solid var(--texto);
+    background:transparent;
+    color:var(--texto);
+    border-radius:999px;
+    padding:10px 16px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .18s ease, color .18s ease;
+  }
+  .chip:hover{ background:var(--texto); color:var(--fondo); }
+  .chip[aria-pressed="true"]{ background:var(--texto); color:var(--fondo); }
+  .extra{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .toggle{ font-size:13px; color:var(--texto-sec); display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+  .toggle input{ width:16px; height:16px; accent-color:var(--acento); }
+  .conteo{ font-family:"Space Mono", monospace; font-size:12px; color:var(--texto-sec); }
+
+  main{ padding:30px 0 18px; }
+  .grilla{ display:grid; grid-template-columns:1fr; gap:28px 18px; }
+  @media (min-width:640px){ .grilla{ grid-template-columns:1fr 1fr; } }
+  @media (min-width:980px){ .grilla{ grid-template-columns:1fr 1fr 1fr; } }
+
+  .card{
+    background:var(--panel);
+    border-radius:var(--radio);
+    overflow:hidden;
+    border:1px solid var(--linea);
+    display:flex; flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{ transform:translateY(-5px); box-shadow:0 22px 55px -34px rgba(0,0,0,.25); }
+
+  .foto{
+    position:relative;
+    aspect-ratio:3/4;
+    background:#F2EFEA;
+    overflow:hidden;
+  }
+  .foto img{ width:100%; height:100%; object-fit:cover; }
+
+  .ph{
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; color:var(--texto-sec);
+    background:repeating-linear-gradient(45deg,#F7F4EE,#F7F4EE 11px,#EFEAE2 11px,#EFEAE2 22px);
+  }
+  .ph svg{ width:64px; height:64px; color:var(--texto-sec); }
+  .ph span{ font-family:"Space Mono", monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+
+  .tag{
+    position:absolute; top:16px; left:16px;
+    background:rgba(255,255,255,.92);
+    border:1px solid var(--linea);
+    border-radius:999px;
+    padding:10px 14px;
+    font-family:"Space Mono", monospace;
+    color:var(--texto);
+  }
+  .tag .precio{ font-weight:700; font-size:14px; letter-spacing:-.01em; }
+
+  .vendido-stamp{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(21,19,16,.24);
+  }
+  .vendido-stamp b{
+    font-family:"Fraunces", serif; font-weight:700;
+    color:var(--panel); border:2px solid var(--panel); border-radius:8px;
+    padding:8px 20px; font-size:18px; letter-spacing:.08em;
+    transform:rotate(-6deg); text-transform:uppercase;
+  }
+  .card.is-sold .foto img{ filter:grayscale(.8) opacity(.9); }
+
+  .info{ padding:20px 20px 22px; display:flex; flex-direction:column; gap:12px; flex:1; }
+  .nombre{ font-family:"Fraunces", serif; font-weight:700; font-size:20px; line-height:1.15; margin:0; }
+  .meta{ display:flex; flex-wrap:wrap; gap:8px; }
+  .meta span{
+    font-family:"Space Mono", monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.08em;
+    background:rgba(21,19,16,.05); border-radius:6px; padding:5px 10px; color:var(--texto-sec);
+  }
+  .desc{ font-size:14px; color:var(--texto-sec); margin:0; }
+  .btn{
+    margin-top:auto;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--btn); color:var(--panel);
+    border:0; border-radius:12px; padding:13px 16px;
+    font-family:"DM Sans", sans-serif; font-weight:700; font-size:14px;
+    transition:background .18s ease;
+  }
+  .btn:hover{ background:var(--btn-hov); }
+  .btn svg{ width:18px; height:18px; }
+  .btn.disabled{ background:#D8D3CC; color:#8A8178; pointer-events:none; }
+
+  .vacio{ text-align:center; color:var(--texto-sec); padding:70px 20px; font-family:"Space Mono", monospace; }
+
+  footer{ margin-top:48px; border-top:1px solid var(--linea); }
+  .footer-in{ padding:34px 18px 50px; text-align:center; }
+  .footer-in .nota{ max-width:560px; margin:0 auto 16px; color:var(--texto-sec); font-size:14px; }
+  .footer-in .firma{ font-family:"Fraunces", serif; font-size:18px; color:var(--texto); }
+
+  :focus-visible{ outline:3px solid var(--acento); outline-offset:2px; border-radius:4px; }
+  @media (prefers-reduced-motion:reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="logo-wrap">
+      <img id="logoImg" class="logo" src="nysc.png" alt="nysc logo">
+      <h1 class="marca" id="marca"></h1>
+    </div>
+    <p class="eslogan" id="eslogan"></p>
+    <nav class="socials" id="socials" aria-label="Redes sociales"></nav>
+  </header>
+
+  <div class="barra">
+    <div class="wrap barra-row">
+      <input class="buscar" id="buscar" type="search" placeholder="Buscar prenda, marca, talla…" aria-label="Buscar">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por categoría"></div>
+      <div class="extra">
+        <label class="toggle"><input type="checkbox" id="hideSold"> Ocultar vendidas</label>
+        <span class="conteo" id="conteo"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="grilla" id="grilla"></div>
+  </main>
+
+  <footer>
+    <div class="footer-in">
+      <p class="nota" id="nota"></p>
+      <p class="firma" id="firma"></p>
+    </div>
+  </footer>
+
+<script>
+/* DATOS DE LA TIENDA  */
+const TIENDA = {
+  nombre:   "nysc",
+  eslogan:  "second chance",
+  whatsapp: "+50671739876",
+  instagram:"https://www.instagram.com/nysc.cr?igsh=MWZvN3JrNDR1N3Zo&utm_source=qr",
+  tiktok:   "https://www.tiktok.com/@nysc.cr?_r=1&_t=ZS-97FDRTI6kJp",
+  nota:     "Pagos por SINPE Móvil. Coordinamos entrega o envío por Instagram o WhatsApp. ¡Las prendas son únicas, quien primero escribe se la lleva!"
+};
+
+/* ======================================================================
+   2) TUS PRENDAS — copiá un bloque { ... } y pegá uno nuevo por cada prenda.
+      Campos:
+        nombre      -> texto
+        precio      -> número en colones, SIN puntos (ej: 8500)
+        categoria   -> debe coincidir con una de CATEGORIAS (abajo)
+        talla       -> "S", "M", "38", "Única"...
+        condicion   -> "Como nuevo", "Excelente", "Buen estado"...
+        marca       -> opcional, dejá "" si no aplica
+        descripcion -> 1 o 2 frases
+        foto        -> nombre del archivo de la foto (ej "remera.jpg")  o  un enlace https://...
+                       dejá "" para ver un dibujo de ejemplo mientras conseguís la foto
+        vendido     -> false (disponible)  o  true (ya se vendió)
+   ====================================================================== */
+const PRENDAS = [
+  {
+    nombre:"Camisa de mezclilla oversize",
+    precio:9500, categoria:"Camisas", talla:"M", condicion:"Excelente",
+    marca:"Levi's", descripcion:"Corte amplio, mezclilla suave ya lavada. Ideal para clima fresco.",
+    foto:"", vendido:false
+  },
+  {
+    nombre:"Vestido floral midi",
+    precio:11000, categoria:"Vestidos", talla:"S", condicion:"Como nuevo",
+    marca:"", descripcion:"Estampado de flores pequeñas, tela liviana con vuelo. Largo a media pierna.",
+    foto:"", vendido:false
+  },
+  {
+    nombre:"Jeans rectos tiro alto",
+    precio:8000, categoria:"Pantalones", talla:"30", condicion:"Buen estado",
+    marca:"Wrangler", descripcion:"Tiro alto, pierna recta. Pequeño desgaste natural en el ruedo.",
+    foto:"", vendido:true
+  },
+  {
+    nombre:"Abrigo de paño camel",
+    precio:16500, categoria:"Abrigos", talla:"L", condicion:"Excelente",
+    marca:"", descripcion:"Color camel atemporal, forro interno completo. Súper abrigado.",
+    foto:"", vendido:false
+  },
+  {
+    nombre:"Bolso de cuero vintage",
+    precio:13000, categoria:"Accesorios", talla:"Única", condicion:"Buen estado",
+    marca:"", descripcion:"Cuero genuino con pátina bonita. Correa ajustable y broche metálico.",
+    foto:"", vendido:false
+  },
+  {
+    nombre:"Suéter tejido a mano",
+    precio:7500, categoria:"Camisas", talla:"M", condicion:"Como nuevo",
+    marca:"", descripcion:"Punto grueso, tono mostaza. Calientito y con muchísima onda.",
+    foto:"", vendido:false
+  }
+];
+
+/* Las categorías que aparecen como filtros (en orden). Editá a tu gusto. */
+const CATEGORIAS = ["Camisas","Vestidos","Pantalones","Abrigos","Accesorios"];
+
+
+/* ======================================================================
+   De aquí para abajo NO necesitás cambiar nada.
+   ====================================================================== */
+
+const ICONOS = {
+  Camisas:'<path d="M32 18 L20 26 V46 H30 V96 H70 V46 H80 V26 L68 18 C66 26 56 28 50 28 C44 28 34 26 32 18 Z"/>',
+  Vestidos:'<path d="M40 16 C40 24 60 24 60 16 M38 18 L24 50 H34 L30 96 H70 L66 50 H76 L62 18"/>',
+  Pantalones:'<path d="M34 16 H66 L70 96 H56 L50 46 L44 96 H30 Z"/>',
+  Abrigos:'<path d="M34 16 L18 28 V52 H30 V96 H70 V52 H82 V28 L66 16 M50 18 V94"/>',
+  Accesorios:'<path d="M30 40 H70 L74 92 H26 Z M40 40 V32 A10 10 0 0 1 60 32 V40"/>',
+  _:'<path d="M32 18 L20 26 V46 H30 V96 H70 V46 H80 V26 L68 18 C66 26 56 28 50 28 C44 28 34 26 32 18 Z"/>'
+};
+function iconoSVG(cat){
+  const d = ICONOS[cat] || ICONOS._;
+  return '<svg viewBox="0 0 100 112" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'+d+'</svg>';
+}
+
+const colones = n => "₡" + Number(n).toLocaleString("es-CR");
+
+function waLink(p){
+  const msg = "¡Hola! Me interesa esta prenda: " + p.nombre +
+              " (talla " + p.talla + ") — " + colones(p.precio) + ". ¿Sigue disponible?";
+  return "https://wa.me/" + TIENDA.whatsapp.replace(/\D/g,"") + "?text=" + encodeURIComponent(msg);
+}
+
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.5-1.2-2.9s.7-2 1-2.3c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.4.5-.3.3c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.7 1 .9 1.8 1.2 2.1 1.3.3.1.5.1.6 0l.7-.9c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.1.1.6 0 1.3Z"/></svg>';
+
+let estado = { cat:"Todas", q:"", hideSold:false };
+
+/* Detectar si existe el archivo de logo y ajustar el encabezado */
+function initLogo(){
+  const img = document.getElementById('logoImg');
+  const header = document.querySelector('header.top');
+  if(!img || !header) return;
+  header.classList.add('no-logo');
+  img.addEventListener('load', ()=>{
+    header.classList.remove('no-logo');
+  });
+  img.addEventListener('error', ()=>{
+    img.style.display = 'none';
+    header.classList.add('no-logo');
+  });
+}
+
+function pintarCabecera(){
+  document.getElementById("marca").textContent = TIENDA.nombre;
+  document.getElementById("eslogan").textContent = TIENDA.eslogan;
+  document.getElementById("nota").textContent = TIENDA.nota;
+  document.getElementById("firma").textContent = TIENDA.nombre;
+  document.title = "Catálogo · " + TIENDA.nombre;
+
+  const soc = document.getElementById("socials");
+  const links = [];
+  if(TIENDA.instagram) links.push(["Instagram", TIENDA.instagram]);
+  if(TIENDA.tiktok)    links.push(["TikTok", TIENDA.tiktok]);
+  if(TIENDA.whatsapp)  links.push(["WhatsApp", "https://wa.me/"+TIENDA.whatsapp.replace(/\D/g,"")]);
+  soc.innerHTML = links.map(([t,u]) => '<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>').join("");
+
+  const chips = document.getElementById("chips");
+  const cats = ["Todas", ...CATEGORIAS];
+  chips.innerHTML = cats.map(c =>
+    '<button class="chip" data-cat="'+c+'" aria-pressed="'+(c===estado.cat)+'">'+c+'</button>'
+  ).join("");
+  chips.querySelectorAll(".chip").forEach(b=>{
+    b.addEventListener("click", ()=>{ estado.cat = b.dataset.cat; pintarChips(); pintar(); });
+  });
+}
+function pintarChips(){
+  document.querySelectorAll("#chips .chip").forEach(b=>{
+    b.setAttribute("aria-pressed", b.dataset.cat === estado.cat);
+  });
+}
+
+function pintar(){
+  const grilla = document.getElementById("grilla");
+  const q = estado.q.trim().toLowerCase();
+
+  const lista = PRENDAS.filter(p=>{
+    if(estado.cat !== "Todas" && p.categoria !== estado.cat) return false;
+    if(estado.hideSold && p.vendido) return false;
+    if(q){
+      const texto = [p.nombre,p.marca,p.talla,p.categoria,p.condicion,p.descripcion].join(" ").toLowerCase();
+      if(!texto.includes(q)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById("conteo").textContent =
+    lista.filter(p=>!p.vendido).length + " disponibles · " + lista.length + " en total";
+
+  if(!lista.length){
+    grilla.innerHTML = '<p class="vacio" style="grid-column:1/-1">No hay prendas que coincidan con tu búsqueda.</p>';
+    return;
+  }
+
+  grilla.innerHTML = lista.map(p=>{
+    const foto = p.foto
+      ? '<img src="'+p.foto+'" alt="'+p.nombre+'" loading="lazy">'
+      : '<div class="ph">'+iconoSVG(p.categoria)+'<span>Foto de ejemplo</span></div>';
+    const meta = [p.talla && "Talla "+p.talla, p.condicion, p.marca]
+      .filter(Boolean).map(t=>'<span>'+t+'</span>').join("");
+    const stamp = p.vendido ? '<div class="vendido-stamp"><b>Vendido</b></div>' : '';
+    const btn = p.vendido
+      ? '<span class="btn disabled">Ya no disponible</span>'
+      : '<a class="btn" href="'+waLink(p)+'" target="_blank" rel="noopener">'+WA_ICON+'Consultar por WhatsApp</a>';
+    return (
+      '<article class="card'+(p.vendido?' is-sold':'')+'">'+
+        '<div class="foto">'+foto+
+          '<div class="tag"><span class="precio">'+colones(p.precio)+'</span></div>'+stamp+
+        '</div>'+
+        '<div class="info">'+
+          '<h2 class="nombre">'+p.nombre+'</h2>'+
+          '<div class="meta">'+meta+'</div>'+
+          (p.descripcion?'<p class="desc">'+p.descripcion+'</p>':'')+
+          btn+
+        '</div>'+
+      '</article>'
+    );
+  }).join("");
+}
+
+document.getElementById("buscar").addEventListener("input", e=>{ estado.q = e.target.value; pintar(); });
+document.getElementById("hideSold").addEventListener("change", e=>{ estado.hideSold = e.target.checked; pintar(); });
+
+initLogo();
+pintarCabecera();
+pintar();
+</script>
+</body>
+</html>
